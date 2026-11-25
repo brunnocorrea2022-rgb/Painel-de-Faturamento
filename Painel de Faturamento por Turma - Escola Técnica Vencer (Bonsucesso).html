@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Faturamento por Turma — Escola Técnica Vencer (Bonsucesso) | 2026</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Chart.js + DataLabels Plugin via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            navy: {
+              850: '#10233f',
+              900: '#0a192f',
+              950: '#061020',
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    html, body {
+      font-family: 'Inter', sans-serif;
+      background-color: #F8FAFC;
+      color: #0F172A;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+    /* Barra de rolagem discreta */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+    /* Ocultar scrollbar nas pílulas horizontais no mobile */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-blue-100 selection:text-blue-900">
+
+  <!-- Cabeçalho Executivo Mobile-First -->
+  <header class="bg-gradient-to-br from-navy-950 via-navy-900 to-blue-950 text-white shadow-md border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-4">
+      <div class="flex items-start justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+            </svg>
+          </div>
+          <div>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-blue-300 block">
+              Unidade Bonsucesso • Letivo 2026
+            </span>
+            <h1 class="text-lg sm:text-2xl font-extrabold tracking-tight text-white leading-tight">
+              Escola Técnica Vencer
+            </h1>
+          </div>
+        </div>
+
+        <!-- Botão de Compartilhamento Rápido (WhatsApp / Share) -->
+        <button id="btnCompartilhar" type="button" class="min-h-[44px] inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white text-xs sm:text-sm font-bold shadow-sm transition shrink-0 cursor-pointer">
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+          </svg>
+          <span>Compartilhar</span>
+        </button>
+      </div>
+
+      <!-- Seletor de Período em Destaque (Pílulas Grandes de Toque Fácil) -->
+      <div class="mt-4 pt-3 border-t border-slate-800/80">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            Período de Análise
+          </span>
+          <span id="badgeMesesQtd" class="text-[11px] font-medium text-blue-300">
+            1 mês consolidado
+          </span>
+        </div>
+        <div id="periodPillsContainer" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+          <!-- Pílulas injetadas dinamicamente via JS -->
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5">
+
+    <!-- Toast de Feedback -->
+    <div id="toastBanner" class="hidden fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:w-auto z-50 bg-slate-900 text-white px-4 py-3.5 rounded-2xl shadow-2xl border border-slate-700 flex items-center gap-3 text-sm font-medium">
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0"></span>
+      <span id="toastText">Resumo copiado!</span>
+    </div>
+
+    <!-- KPIs em Grid 2x2 no Celular (4 Colunas no Desktop) -->
+    <section aria-label="Indicadores Principais" class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+      <!-- KPI 1: Receita Realizada (Destaque Principal) -->
+      <div class="bg-white rounded-2xl p-3.5 sm:p-5 border border-slate-200 shadow-xs">
+        <div class="flex items-center justify-between gap-1">
+          <span class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">Realizada</span>
+          <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </span>
+        </div>
+        <div id="kpiRealizada" class="mt-2 text-lg sm:text-2xl lg:text-3xl font-extrabold text-emerald-600 tabular-nums tracking-tight leading-none">
+          R$ 130.184,94
+        </div>
+        <p id="kpiRealizadaSub" class="mt-1.5 text-[11px] sm:text-xs text-slate-500 truncate">
+          Baixado no período
+        </p>
+      </div>
+
+      <!-- KPI 2: Receita Prevista -->
+      <div class="bg-white rounded-2xl p-3.5 sm:p-5 border border-slate-200 shadow-xs">
+        <div class="flex items-center justify-between gap-1">
+          <span class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">Prevista</span>
+          <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+          </span>
+        </div>
+        <div id="kpiPrevista" class="mt-2 text-lg sm:text-2xl lg:text-3xl font-extrabold text-navy-900 tabular-nums tracking-tight leading-none">
+          R$ 253.712,88
+        </div>
+        <p id="kpiTurmasCount" class="mt-1.5 text-[11px] sm:text-xs text-slate-500 truncate">
+          25 turmas ativas
+        </p>
+      </div>
+
+      <!-- KPI 3: Inadimplência -->
+      <div class="bg-white rounded-2xl p-3.5 sm:p-5 border border-slate-200 shadow-xs">
+        <div class="flex items-center justify-between gap-1">
+          <span class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">Inadimplência</span>
+          <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </span>
+        </div>
+        <div id="kpiInadimplencia" class="mt-2 text-lg sm:text-2xl lg:text-3xl font-extrabold text-amber-600 tabular-nums tracking-tight leading-none">
+          R$ 123.908,89
+        </div>
+        <p class="mt-1.5 text-[11px] sm:text-xs text-slate-500 truncate">
+          Saldo em aberto
+        </p>
+      </div>
+
+      <!-- KPI 4: % Realizado -->
+      <div class="bg-white rounded-2xl p-3.5 sm:p-5 border border-slate-200 shadow-xs">
+        <div class="flex items-center justify-between gap-1">
+          <span class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">% Atingido</span>
+          <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
+          </span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-1.5">
+          <span id="kpiTaxa" class="text-lg sm:text-2xl lg:text-3xl font-extrabold text-navy-900 tabular-nums tracking-tight leading-none">
+            51,31%
+          </span>
+        </div>
+        <div class="mt-2.5 w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+          <div id="kpiTaxaBar" class="bg-emerald-500 h-2 rounded-full transition-all duration-300" style="width: 51.31%"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mini Gráfico de Evolução Mês a Mês (Visível no Acumulado quando houver 2+ meses) -->
+    <section id="evolucaoMensalSection" class="hidden bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-xs">
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <h2 class="text-sm sm:text-base font-bold text-navy-900">Evolução Mês a Mês — 2026</h2>
+          <p class="text-xs text-slate-500">Comparativo consolidado entre os meses cadastrados</p>
+        </div>
+        <span class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 text-xs font-semibold">Série Histórica</span>
+      </div>
+      <div class="relative w-full h-[210px]">
+        <canvas id="evolucaoChart"></canvas>
+      </div>
+    </section>
+
+    <!-- Controles Mobile-First (Toque Fácil >= 44px) -->
+    <section aria-label="Filtros e Visualização" class="bg-white rounded-2xl p-3.5 sm:p-5 border border-slate-200 shadow-xs space-y-3.5">
+      <!-- Seletor Rápido de Métrica do Gráfico -->
+      <div>
+        <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">
+          Visualização do Gráfico
+        </span>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          <button type="button" data-metric="comparativo" class="metric-btn min-h-[44px] px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold border transition flex items-center justify-center gap-2 cursor-pointer bg-blue-600 text-white border-blue-600 shadow-xs">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-300"></span>
+            <span>Realizada vs Prevista</span>
+          </button>
+          <button type="button" data-metric="realizada" class="metric-btn min-h-[44px] px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold border transition flex items-center justify-center gap-2 cursor-pointer bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+            <span>Somente Realizada</span>
+          </button>
+          <button type="button" data-metric="inadimplencia" class="metric-btn min-h-[44px] px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold border transition flex items-center justify-center gap-2 cursor-pointer bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+            <span>Inadimplência</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Filtro de Bloco + Ordenação + Toggle Débitos Pendentes -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2 border-t border-slate-100">
+        <!-- Filtro de Bloco -->
+        <div>
+          <label for="filtroBloco" class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+            Bloco de Turmas
+          </label>
+          <select id="filtroBloco" class="w-full min-h-[44px] rounded-xl border border-slate-300 bg-slate-50 px-3 text-sm font-semibold text-slate-800 focus:border-blue-600 focus:bg-white focus:outline-none cursor-pointer">
+            <option value="todas">Todas as Turmas (25)</option>
+            <option value="bloco1">Bloco 1 (ENF63–ENF77)</option>
+            <option value="bloco2">Bloco 2 (ENF78–ENF88)</option>
+          </select>
+        </div>
+
+        <!-- Ordenação -->
+        <div>
+          <label for="ordenacaoSelect" class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+            Ordenar por
+          </label>
+          <select id="ordenacaoSelect" class="w-full min-h-[44px] rounded-xl border border-slate-300 bg-slate-50 px-3 text-sm font-semibold text-slate-800 focus:border-blue-600 focus:bg-white focus:outline-none cursor-pointer">
+            <option value="realizada">Maior Faturamento</option>
+            <option value="turma">Ordem da Turma (ENF63→88)</option>
+            <option value="taxa">Maior % Realizado</option>
+            <option value="inadimplencia">Maior Inadimplência</option>
+          </select>
+        </div>
+
+        <!-- Toggle Débitos Pendentes -->
+        <div>
+          <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+            Débitos Pendentes
+          </span>
+          <button id="toggleDebitosPendentes" type="button" aria-pressed="true" class="w-full min-h-[44px] flex items-center justify-between px-3.5 rounded-xl border border-blue-200 bg-blue-50 text-blue-900 text-xs sm:text-sm font-bold transition cursor-pointer">
+            <span id="labelDebitosPendentes">Incluídos no total</span>
+            <span id="pillDebitosPendentes" class="px-2 py-0.5 rounded-full bg-blue-600 text-white text-[11px] font-bold">SIM</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Nota discreta sobre Débitos Pendentes -->
+      <p class="text-[11px] sm:text-xs text-slate-500 leading-relaxed">
+        * Nas turmas <strong>ENF80 a ENF86</strong>, o grupo <em>Débitos Pendentes</em> entra com prevista R$ 0,00 e realizada igual à inadimplência. Desative acima para analisar apenas as parcelas regulares do mês.
+      </p>
+    </section>
+
+    <!-- Gráfico de Barras Horizontais Mobile-First -->
+    <section aria-label="Gráfico de Barras por Turma" class="bg-white rounded-2xl p-3.5 sm:p-6 border border-slate-200 shadow-xs">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+        <div>
+          <h2 id="chartTitle" class="text-base sm:text-lg font-extrabold text-navy-900">
+            Faturamento por Turma — Novembro/2026
+          </h2>
+          <p id="chartSubtitle" class="text-xs text-slate-500">
+            Toque em qualquer barra ou card abaixo para ver os grupos financeiros da turma.
+          </p>
+        </div>
+
+        <!-- Legenda Clara -->
+        <div id="customLegend" class="flex flex-wrap items-center gap-3 text-xs font-semibold">
+          <span class="inline-flex items-center gap-1.5 text-slate-700">
+            <span class="w-3 h-3 rounded-sm bg-[#059669]"></span> Realizada
+          </span>
+          <span class="inline-flex items-center gap-1.5 text-slate-600">
+            <span class="w-3 h-3 rounded-sm bg-[#CBD5E1]"></span> Prevista
+          </span>
+        </div>
+      </div>
+
+      <!-- Container com altura calculada dinamicamente (numTurmas * 58px, mín 500px) -->
+      <div id="chartWrapper" class="relative w-full" style="height: 1450px;">
+        <canvas id="faturamentoChart"></canvas>
+      </div>
+    </section>
+
+    <!-- Detalhamento por Turma: Cards no Mobile (< 768px) e Tabela no Desktop (>= 768px) -->
+    <section aria-label="Detalhamento por Turma" class="space-y-3">
+      <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-base sm:text-lg font-extrabold text-navy-900">
+            Detalhamento por Turma
+          </h2>
+          <p class="text-xs text-slate-500">
+            Toque na turma para abrir a composição por grupo financeiro
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <!-- Busca -->
+          <div class="relative flex-1 sm:w-52">
+            <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input id="buscaTurma" type="text" placeholder="Buscar turma..." class="w-full min-h-[44px] pl-9 pr-3 rounded-xl border border-slate-300 bg-slate-50 text-sm font-medium text-slate-800 placeholder-slate-400 focus:border-blue-600 focus:bg-white focus:outline-none" />
+          </div>
+
+          <!-- Exportar CSV -->
+          <button id="btnExportarCsv" type="button" class="min-h-[44px] inline-flex items-center gap-1.5 px-3.5 rounded-xl bg-navy-900 hover:bg-navy-850 text-white text-xs sm:text-sm font-bold shadow-xs transition shrink-0 cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            <span>CSV</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- VISÃO MOBILE (< 768px): Cards Espaçosos e Legíveis -->
+      <div id="mobileCardsContainer" class="grid grid-cols-1 gap-3 md:hidden">
+        <!-- Cards injetados via JS -->
+      </div>
+
+      <!-- VISÃO DESKTOP (>= 768px): Tabela Completa -->
+      <div class="hidden md:block bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-200 text-xs font-bold uppercase tracking-wider text-slate-500">
+                <th class="py-3.5 px-6">Turma</th>
+                <th class="py-3.5 px-4 text-right">Prevista</th>
+                <th class="py-3.5 px-4 text-right">Realizada</th>
+                <th class="py-3.5 px-4 text-right">Inadimplência</th>
+                <th class="py-3.5 px-4 text-right">% Atingido</th>
+                <th class="py-3.5 px-6 text-center">Grupos</th>
+              </tr>
+            </thead>
+            <tbody id="tabelaCorpo" class="divide-y divide-slate-100 text-sm">
+              <!-- Linhas injetadas via JS -->
+            </tbody>
+            <tfoot id="tabelaRodape" class="bg-slate-100 border-t-2 border-slate-300 font-extrabold text-sm text-navy-900">
+              <!-- Totais injetados via JS -->
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="bg-white border-t border-slate-200 py-5 mt-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500 text-center sm:text-left">
+      <span>Escola Técnica Vencer — Bonsucesso • Período Letivo 2026</span>
+      <span>Painel atualizado continuamente • Cód. Relatório: F98</span>
+    </div>
+  </footer>
+
+  <!-- Bottom Sheet / Modal Mobile-First para Grupos Financeiros -->
+  <div id="detalheModal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/60 backdrop-blur-xs">
+    <div class="bg-white w-full sm:max-w-lg rounded-t-3xl sm:rounded-2xl shadow-2xl border-t sm:border border-slate-200 overflow-hidden max-h-[90vh] flex flex-col">
+      <!-- Indicador de arraste no mobile -->
+      <div class="sm:hidden w-12 h-1.5 bg-slate-300 rounded-full mx-auto mt-3 mb-1"></div>
+
+      <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+        <div>
+          <span id="modalSubtitulo" class="text-[11px] uppercase tracking-wider text-blue-600 font-bold">
+            Composição Financeira
+          </span>
+          <h3 id="modalTitulo" class="text-lg font-extrabold text-navy-900">
+            Turma ENF63
+          </h3>
+        </div>
+        <button id="fecharModal" type="button" class="min-w-[44px] min-h-[44px] rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition cursor-pointer" aria-label="Fechar">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="p-5 overflow-y-auto space-y-4">
+        <div id="modalResumoCards" class="grid grid-cols-3 gap-2 text-center">
+          <!-- Cards resumo -->
+        </div>
+
+        <div class="space-y-2" id="modalGruposLista">
+          <!-- Lista de grupos financeiros -->
+        </div>
+
+        <p id="modalObservacao" class="hidden text-xs text-amber-900 bg-amber-50 border border-amber-200 rounded-xl p-3 leading-relaxed"></p>
+      </div>
+
+      <div class="bg-slate-50 px-5 py-3.5 border-t border-slate-200">
+        <button id="fecharModalBtn" type="button" class="w-full min-h-[44px] rounded-xl bg-navy-900 hover:bg-navy-850 text-white text-sm font-bold transition cursor-pointer">
+          Fechar Detalhes
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Registra o plugin ChartDataLabels globalmente
+    Chart.register(ChartDataLabels);
+
+    /**
+     * ============================================================================
+     * ESTRUTURA DE DADOS MENSAL (FÁCIL DE ATUALIZAR TODO MÊS)
+     * Para adicionar um novo mês (ex: Dezembro/2026), basta incluir a chave
+     * "2026-12": { label: "Dezembro/2026", shortLabel: "Dez/2026", turmas: [...] }
+     * e o painel calculará o "Acumulado 2026" e a evolução mensal automaticamente.
+     * ============================================================================
+     */
+    const DADOS_MENSAIS = {
+      "2026-11": {
+        label: "Novembro/2026",
+        shortLabel: "Nov/2026",
+        referencia: "11/2026",
+        turmas: [
+          {
+            turma: "ENF63",
+            bloco: "bloco1",
+            prevista: 9430.00,
+            realizada: 5755.00,
+            inadimplencia: 1864.50,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 9430.00, realizada: 5755.00, inadimplencia: 1864.50 }
+            ]
+          },
+          {
+            turma: "ENF64",
+            bloco: "bloco1",
+            prevista: 9820.00,
+            realizada: 3855.00,
+            inadimplencia: 4847.70,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 9820.00, realizada: 3855.00, inadimplencia: 4847.70 }
+            ]
+          },
+          {
+            turma: "ENF65",
+            bloco: "bloco1",
+            prevista: 7310.00,
+            realizada: 2660.00,
+            inadimplencia: 3453.45,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 7310.00, realizada: 2660.00, inadimplencia: 3453.45 }
+            ]
+          },
+          {
+            turma: "ENF66",
+            bloco: "bloco1",
+            prevista: 13560.00,
+            realizada: 7360.00,
+            inadimplencia: 3984.45,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 13285.00, realizada: 7085.00, inadimplencia: 3984.45 },
+              { nome: "Quitação de Débito", prevista: 275.00, realizada: 275.00, inadimplencia: 0.00 }
+            ]
+          },
+          {
+            turma: "ENF67",
+            bloco: "bloco1",
+            prevista: 7494.69,
+            realizada: 2630.00,
+            inadimplencia: 3726.84,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 6500.00, realizada: 2440.00, inadimplencia: 2922.15 },
+              { nome: "Quitação de Débito", prevista: 190.00, realizada: 190.00, inadimplencia: 0.00 },
+              { nome: "Débitos Pendentes", prevista: 804.69, realizada: 0.00, inadimplencia: 804.69 }
+            ]
+          },
+          {
+            turma: "ENF68",
+            bloco: "bloco1",
+            prevista: 8360.00,
+            realizada: 3240.00,
+            inadimplencia: 3821.25,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 8360.00, realizada: 3240.00, inadimplencia: 3821.25 },
+              { nome: "Quitação de Débito", prevista: 0.00, realizada: 0.00, inadimplencia: 0.00 }
+            ]
+          },
+          {
+            turma: "ENF69",
+            bloco: "bloco1",
+            prevista: 5170.00,
+            realizada: 2190.00,
+            inadimplencia: 1982.15,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 5170.00, realizada: 2190.00, inadimplencia: 1982.15 }
+            ]
+          },
+          {
+            turma: "ENF70",
+            bloco: "bloco1",
+            prevista: 11965.00,
+            realizada: 4415.00,
+            inadimplencia: 5926.00,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 11965.00, realizada: 4415.00, inadimplencia: 5926.00 }
+            ]
+          },
+          {
+            turma: "ENF71",
+            bloco: "bloco1",
+            prevista: 9575.00,
+            realizada: 4635.00,
+            inadimplencia: 3018.00,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 9575.00, realizada: 4635.00, inadimplencia: 3018.00 }
+            ]
+          },
+          {
+            turma: "ENF72",
+            bloco: "bloco1",
+            prevista: 9325.00,
+            realizada: 3060.00,
+            inadimplencia: 5382.10,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 8725.00, realizada: 2460.00, inadimplencia: 5382.10 },
+              { nome: "Quitação de Débito", prevista: 600.00, realizada: 600.00, inadimplencia: 0.00 }
+            ]
+          },
+          {
+            turma: "ENF73",
+            bloco: "bloco1",
+            prevista: 8092.80,
+            realizada: 3270.00,
+            inadimplencia: 3573.20,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 6670.00, realizada: 3050.00, inadimplencia: 2370.40 },
+              { nome: "Quitação de Débito", prevista: 220.00, realizada: 220.00, inadimplencia: 0.00 },
+              { nome: "Débitos Pendentes", prevista: 1202.80, realizada: 0.00, inadimplencia: 1202.80 }
+            ]
+          },
+          {
+            turma: "ENF74",
+            bloco: "bloco1",
+            prevista: 13035.00,
+            realizada: 4325.00,
+            inadimplencia: 7264.35,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 12315.00, realizada: 3605.00, inadimplencia: 7264.35 },
+              { nome: "Quitação de Débito", prevista: 720.00, realizada: 720.00, inadimplencia: 0.00 }
+            ]
+          },
+          {
+            turma: "ENF75",
+            bloco: "bloco1",
+            prevista: 13905.39,
+            realizada: 5220.00,
+            inadimplencia: 6631.66,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 12744.98, realizada: 5220.00, inadimplencia: 5471.25 },
+              { nome: "Débitos Pendentes", prevista: 1160.41, realizada: 0.00, inadimplencia: 1160.41 }
+            ]
+          },
+          {
+            turma: "ENF76",
+            bloco: "bloco1",
+            prevista: 8230.00,
+            realizada: 4380.00,
+            inadimplencia: 2292.35,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 7670.00, realizada: 4110.00, inadimplencia: 1996.05 },
+              { nome: "Plano Financeiro 02", prevista: 290.00, realizada: 0.00, inadimplencia: 296.30 },
+              { nome: "Quitação de Débito", prevista: 270.00, realizada: 270.00, inadimplencia: 0.00 }
+            ]
+          },
+          {
+            turma: "ENF77",
+            bloco: "bloco1",
+            prevista: 15620.00,
+            realizada: 5950.00,
+            inadimplencia: 7754.70,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 14920.00, realizada: 5250.00, inadimplencia: 7754.70 },
+              { nome: "Quitação de Débito", prevista: 700.00, realizada: 700.00, inadimplencia: 0.00 }
+            ]
+          },
+          {
+            turma: "ENF78",
+            bloco: "bloco2",
+            prevista: 15950.00,
+            realizada: 6810.00,
+            inadimplencia: 6814.80,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 15920.00, realizada: 6780.00, inadimplencia: 6814.80 },
+              { nome: "Produto Online", prevista: 30.00, realizada: 30.00, inadimplencia: 0.00 }
+            ]
+          },
+          {
+            turma: "ENF80",
+            bloco: "bloco2",
+            prevista: 12350.00,
+            realizada: 8923.00,
+            inadimplencia: 12145.40,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 12100.00, realizada: 3700.00, inadimplencia: 7172.40 },
+              { nome: "Quitação de Débito", prevista: 250.00, realizada: 250.00, inadimplencia: 0.00 },
+              { nome: "Débitos Pendentes", prevista: 0.00, realizada: 4973.00, inadimplencia: 4973.00 }
+            ]
+          },
+          {
+            turma: "ENF81",
+            bloco: "bloco2",
+            prevista: 10060.00,
+            realizada: 10365.25,
+            inadimplencia: 9477.10,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 9730.00, realizada: 4460.00, inadimplencia: 3851.85 },
+              { nome: "Mensalidade Escolar", prevista: 330.00, realizada: 280.00, inadimplencia: 0.00 },
+              { nome: "Débitos Pendentes", prevista: 0.00, realizada: 5625.25, inadimplencia: 5625.25 }
+            ]
+          },
+          {
+            turma: "ENF82",
+            bloco: "bloco2",
+            prevista: 8810.00,
+            realizada: 7399.44,
+            inadimplencia: 4238.84,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 8790.00, realizada: 5000.00, inadimplencia: 1859.40 },
+              { nome: "Minicurso", prevista: 20.00, realizada: 20.00, inadimplencia: 0.00 },
+              { nome: "Débitos Pendentes", prevista: 0.00, realizada: 2379.44, inadimplencia: 2379.44 }
+            ]
+          },
+          {
+            turma: "ENF83",
+            bloco: "bloco2",
+            prevista: 14550.00,
+            realizada: 6567.60,
+            inadimplencia: 8852.20,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 14320.00, realizada: 5240.00, inadimplencia: 7524.60 },
+              { nome: "Quitação de Débito", prevista: 230.00, realizada: 0.00, inadimplencia: 0.00 },
+              { nome: "Débitos Pendentes", prevista: 0.00, realizada: 1327.60, inadimplencia: 1327.60 }
+            ]
+          },
+          {
+            turma: "ENF84",
+            bloco: "bloco2",
+            prevista: 11880.00,
+            realizada: 8415.48,
+            inadimplencia: 8231.28,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 11840.00, realizada: 5060.00, inadimplencia: 4915.80 },
+              { nome: "Minicurso", prevista: 40.00, realizada: 40.00, inadimplencia: 0.00 },
+              { nome: "Débitos Pendentes", prevista: 0.00, realizada: 3315.48, inadimplencia: 3315.48 }
+            ]
+          },
+          {
+            turma: "ENF85",
+            bloco: "bloco2",
+            prevista: 5350.00,
+            realizada: 3650.04,
+            inadimplencia: 2920.53,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 5350.00, realizada: 2490.00, inadimplencia: 1760.49 },
+              { nome: "Débitos Pendentes", prevista: 0.00, realizada: 1160.04, inadimplencia: 1160.04 }
+            ]
+          },
+          {
+            turma: "ENF86",
+            bloco: "bloco2",
+            prevista: 11560.00,
+            realizada: 7552.62,
+            inadimplencia: 3535.89,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 10560.00, realizada: 6060.00, inadimplencia: 2293.27 },
+              { nome: "Quitação de Débito", prevista: 750.00, realizada: 250.00, inadimplencia: 250.00 },
+              { nome: "Parcela Avulsa", prevista: 230.00, realizada: 230.00, inadimplencia: 0.00 },
+              { nome: "Minicurso", prevista: 20.00, realizada: 20.00, inadimplencia: 0.00 },
+              { nome: "Débitos Pendentes", prevista: 0.00, realizada: 992.62, inadimplencia: 992.62 }
+            ]
+          },
+          {
+            turma: "ENF87",
+            bloco: "bloco2",
+            prevista: 8320.00,
+            realizada: 5496.51,
+            inadimplencia: 983.16,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 8030.00, realizada: 5206.51, inadimplencia: 983.16 },
+              { nome: "Quitação de Débito", prevista: 250.00, realizada: 250.00, inadimplencia: 0.00 },
+              { nome: "Minicurso", prevista: 40.00, realizada: 40.00, inadimplencia: 0.00 }
+            ]
+          },
+          {
+            turma: "ENF88",
+            bloco: "bloco2",
+            prevista: 3990.00,
+            realizada: 2060.00,
+            inadimplencia: 1186.99,
+            grupos: [
+              { nome: "Parcelas Enfermagem", prevista: 3720.00, realizada: 1810.00, inadimplencia: 1186.99 },
+              { nome: "Quitação de Débito", prevista: 230.00, realizada: 230.00, inadimplencia: 0.00 },
+              { nome: "Minicurso", prevista: 40.00, realizada: 20.00, inadimplencia: 0.00 }
+            ]
+          }
+        ]
+      }
+    };
+
+    // Estado reativo da interface
+    const state = {
+      periodo: "2026-11", // chave de DADOS_MENSAIS ou "acumulado"
+      metrica: "comparativo", // "comparativo" | "realizada" | "inadimplencia"
+      bloco: "todas", // "todas" | "bloco1" | "bloco2"
+      ordenacao: "realizada", // "realizada" | "turma" | "taxa" | "inadimplencia"
+      incluirDebitosPendentes: true,
+      busca: ""
+    };
+
+    let mainChart = null;
+    let evolucaoChart = null;
+
+    // Formatadores pt-BR
+    const formatBRL = (v) => v.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+
+    const formatBRLCompact = (v) => {
+      if (v >= 1000) {
+        return "R$ " + (v / 1000).toLocaleString("pt-BR", {
+          minimumFractionDigits: 1,
+          maximumFractionDigits: 1
+        }) + "k";
+      }
+      return "R$ " + v.toLocaleString("pt-BR", { maximumFractionDigits: 0 });
+    };
+
+    const formatPct = (v) => v.toLocaleString("pt-BR", {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1
+    }) + "%";
+
+    /**
+     * Calcula automaticamente o "Acumulado 2026" somando todos os meses cadastrados
+     * em DADOS_MENSAIS, consolidando inclusive os grupos financeiros de cada turma.
+     */
+    function getAcumulado2026() {
+      const mesesKeys = Object.keys(DADOS_MENSAIS).sort();
+      const mapaTurmas = new Map();
+
+      mesesKeys.forEach(mesKey => {
+        const mesObj = DADOS_MENSAIS[mesKey];
+        mesObj.turmas.forEach(t => {
+          if (!mapaTurmas.has(t.turma)) {
+            mapaTurmas.set(t.turma, {
+              turma: t.turma,
+              bloco: t.bloco,
+              prevista: 0,
+              realizada: 0,
+              inadimplencia: 0,
+              gruposMap: new Map()
+            });
+          }
+          const acc = mapaTurmas.get(t.turma);
+          acc.prevista = +(acc.prevista + t.prevista).toFixed(2);
+          acc.realizada = +(acc.realizada + t.realizada).toFixed(2);
+          acc.inadimplencia = +(acc.inadimplencia + t.inadimplencia).toFixed(2);
+
+          t.grupos.forEach(g => {
+            if (!acc.gruposMap.has(g.nome)) {
+              acc.gruposMap.set(g.nome, { nome: g.nome, prevista: 0, realizada: 0, inadimplencia: 0 });
+            }
+            const gAcc = acc.gruposMap.get(g.nome);
+            gAcc.prevista = +(gAcc.prevista + g.prevista).toFixed(2);
+            gAcc.realizada = +(gAcc.realizada + g.realizada).toFixed(2);
+            gAcc.inadimplencia = +(gAcc.inadimplencia + g.inadimplencia).toFixed(2);
+          });
+        });
+      });
+
+      const turmasConsolidadas = Array.from(mapaTurmas.values()).map(item => ({
+        turma: item.turma,
+        bloco: item.bloco,
+        prevista: item.prevista,
+        realizada: item.realizada,
+        inadimplencia: item.inadimplencia,
+        grupos: Array.from(item.gruposMap.values())
+      }));
+
+      return {
+        label: `Acumulado 2026 (${mesesKeys.length} ${mesesKeys.length === 1 ? 'mês' : 'meses'})`,
+        shortLabel: "Acumulado 2026",
+        turmas: turmasConsolidadas
+      };
+    }
+
+    // Obtém o dataset bruto do período selecionado (mês específico ou acumulado)
+    function getActivePeriodObject() {
+      if (state.periodo === "acumulado") {
+        return getAcumulado2026();
+      }
+      return DADOS_MENSAIS[state.periodo] || getAcumulado2026();
+    }
+
+    // Aplica filtros de bloco e toggle de Débitos Pendentes
+    function getProcessedTurmas() {
+      const periodObj = getActivePeriodObject();
+      return periodObj.turmas
+        .filter(t => state.bloco === "todas" || t.bloco === state.bloco)
+        .map(t => {
+          if (state.incluirDebitosPendentes) {
+            const taxa = t.prevista > 0 ? (t.realizada / t.prevista) * 100 : 0;
+            return {
+              ...t,
+              calcPrevista: t.prevista,
+              calcRealizada: t.realizada,
+              calcInadimplencia: t.inadimplencia,
+              calcTaxa: taxa
+            };
+          } else {
+            const dp = t.grupos.find(g => g.nome === "Débitos Pendentes");
+            const prev = Math.max(0, +(t.prevista - (dp ? dp.prevista : 0)).toFixed(2));
+            const real = Math.max(0, +(t.realizada - (dp ? dp.realizada : 0)).toFixed(2));
+            const inad = Math.max(0, +(t.inadimplencia - (dp ? dp.inadimplencia : 0)).toFixed(2));
+            const taxa = prev > 0 ? (real / prev) * 100 : 0;
+            return {
+              ...t,
+              calcPrevista: prev,
+              calcRealizada: real,
+              calcInadimplencia: inad,
+              calcTaxa: taxa
+            };
+          }
+        });
+    }
+
+    // Ordena conforme escolha do usuário
+    function getSortedTurmas(lista) {
+      const copy = [...lista];
+      switch (state.ordenacao) {
+        case "realizada":
+          copy.sort((a, b) => b.calcRealizada - a.calcRealizada);
+          break;
+        case "taxa":
+          copy.sort((a, b) => b.calcTaxa - a.calcTaxa);
+          break;
+        case "inadimplencia":
+          copy.sort((a, b) => b.calcInadimplencia - a.calcInadimplencia);
+          break;
+        case "turma":
+        default:
+          copy.sort((a, b) => a.turma.localeCompare(b.turma));
+          break;
+      }
+      return copy;
+    }
+
+    // Renderiza as pílulas de período no cabeçalho
+    function renderPeriodPills() {
+      const container = document.getElementById("periodPillsContainer");
+      const mesesKeys = Object.keys(DADOS_MENSAIS).sort();
+      document.getElementById("badgeMesesQtd").textContent =
+        `${mesesKeys.length} ${mesesKeys.length === 1 ? "mês cadastrado" : "meses cadastrados"}`;
+
+      const pills = [
+        ...mesesKeys.map(k => ({ id: k, label: DADOS_MENSAIS[k].shortLabel })),
+        { id: "acumulado", label: "Acumulado 2026" }
+      ];
+
+      container.innerHTML = pills.map(p => {
+        const active = state.periodo === p.id;
+        return `
+          <button type="button" data-period="${p.id}" class="period-pill min-h-[44px] px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition cursor-pointer ${
+            active
+              ? "bg-blue-600 text-white shadow-sm ring-2 ring-blue-400/50"
+              : "bg-slate-800/90 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700"
+          }">
+            ${p.label}
+          </button>
+        `;
+      }).join("");
+
+      container.querySelectorAll(".period-pill").forEach(btn => {
+        btn.addEventListener("click", () => {
+          state.periodo = btn.getAttribute("data-period");
+          renderPeriodPills();
+          refreshAll();
+        });
+      });
+    }
+
+    // Atualiza KPIs
+    function updateKPIs(turmas) {
+      const totalPrev = turmas.reduce((s, d) => s + d.calcPrevista, 0);
+      const totalReal = turmas.reduce((s, d) => s + d.calcRealizada, 0);
+      const totalInad = turmas.reduce((s, d) => s + d.calcInadimplencia, 0);
+      const taxa = totalPrev > 0 ? (totalReal / totalPrev) * 100 : 0;
+
+      document.getElementById("kpiRealizada").textContent = formatBRL(totalReal);
+      document.getElementById("kpiPrevista").textContent = formatBRL(totalPrev);
+      document.getElementById("kpiInadimplencia").textContent = formatBRL(totalInad);
+      document.getElementById("kpiTaxa").textContent = formatPct(taxa);
+      document.getElementById("kpiTurmasCount").textContent = `${turmas.length} turmas no filtro`;
+      document.getElementById("kpiTaxaBar").style.width = `${Math.min(100, Math.max(0, taxa)).toFixed(1)}%`;
+    }
+
+    // Renderiza mini gráfico de evolução mensal quando houver 2+ meses e estiver no Acumulado
+    function renderEvolucaoMensal() {
+      const section = document.getElementById("evolucaoMensalSection");
+      const mesesKeys = Object.keys(DADOS_MENSAIS).sort();
+
+      if (state.periodo !== "acumulado" || mesesKeys.length < 2) {
+        section.classList.add("hidden");
+        return;
+      }
+
+      section.classList.remove("hidden");
+      const labels = mesesKeys.map(k => DADOS_MENSAIS[k].shortLabel);
+      const realizadas = mesesKeys.map(k => {
+        return DADOS_MENSAIS[k].turmas
+          .filter(t => state.bloco === "todas" || t.bloco === state.bloco)
+          .reduce((acc, t) => {
+            if (state.incluirDebitosPendentes) return acc + t.realizada;
+            const dp = t.grupos.find(g => g.nome === "Débitos Pendentes");
+            return acc + Math.max(0, t.realizada - (dp ? dp.realizada : 0));
+          }, 0);
+      });
+
+      const ctx = document.getElementById("evolucaoChart").getContext("2d");
+      if (evolucaoChart) evolucaoChart.destroy();
+
+      evolucaoChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [{
+            label: "Receita Realizada",
+            data: realizadas,
+            backgroundColor: "#2563EB",
+            borderRadius: 8,
+            barPercentage: 0.55
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            datalabels: {
+              anchor: "end",
+              align: "top",
+              color: "#0F172A",
+              font: { family: "Inter", weight: "bold", size: 11 },
+              formatter: (v) => formatBRLCompact(v)
+            },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => ` Realizada: ${formatBRL(ctx.parsed.y)}`
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grace: "18%",
+              ticks: {
+                font: { family: "Inter", size: 11 },
+                callback: (v) => formatBRLCompact(v)
+              }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { font: { family: "Inter", weight: "bold", size: 12 } }
+            }
+          }
+        }
+      });
+    }
+
+    // Renderiza o Gráfico Horizontal Mobile-First com DataLabels
+    function renderMainChart(sortedTurmas) {
+      const periodObj = getActivePeriodObject();
+      document.getElementById("chartTitle").textContent = `Faturamento por Turma — ${periodObj.label}`;
+
+      // Altura dinâmica obrigatória: numTurmas * 58px, mínimo 500px
+      const wrapper = document.getElementById("chartWrapper");
+      const calculatedHeight = Math.max(500, sortedTurmas.length * 58);
+      wrapper.style.height = `${calculatedHeight}px`;
+
+      const labels = sortedTurmas.map(d => d.turma);
+      const isMobile = window.innerWidth < 640;
+
+      // Atualiza legenda customizada conforme métrica
+      const legendEl = document.getElementById("customLegend");
+      let datasets = [];
+
+      if (state.metrica === "comparativo") {
+        legendEl.innerHTML = `
+          <span class="inline-flex items-center gap-1.5 text-slate-800">
+            <span class="w-3 h-3 rounded-sm bg-[#059669]"></span> Realizada
+          </span>
+          <span class="inline-flex items-center gap-1.5 text-slate-600">
+            <span class="w-3 h-3 rounded-sm bg-[#CBD5E1]"></span> Prevista
+          </span>
+        `;
+        datasets = [
+          {
+            label: "Receita Realizada",
+            data: sortedTurmas.map(d => d.calcRealizada),
+            backgroundColor: "#059669",
+            hoverBackgroundColor: "#047857",
+            borderRadius: 6,
+            barPercentage: 0.85,
+            categoryPercentage: 0.82,
+            datalabels: {
+              display: true,
+              anchor: "end",
+              align: "right",
+              offset: 4,
+              color: "#065F46",
+              font: { family: "Inter", weight: "700", size: isMobile ? 11 : 12 },
+              formatter: (val) => isMobile ? formatBRLCompact(val) : formatBRL(val)
+            }
+          },
+          {
+            label: "Receita Prevista",
+            data: sortedTurmas.map(d => d.calcPrevista),
+            backgroundColor: "#CBD5E1",
+            hoverBackgroundColor: "#94A3B8",
+            borderRadius: 6,
+            barPercentage: 0.85,
+            categoryPercentage: 0.82,
+            datalabels: {
+              display: true,
+              anchor: "end",
+              align: "right",
+              offset: 4,
+              color: "#475569",
+              font: { family: "Inter", weight: "600", size: isMobile ? 10 : 11 },
+              formatter: (val) => isMobile ? formatBRLCompact(val) : formatBRL(val)
+            }
+          }
+        ];
+      } else if (state.metrica === "realizada") {
+        legendEl.innerHTML = `
+          <span class="inline-flex items-center gap-1.5 text-emerald-800">
+            <span class="w-3 h-3 rounded-sm bg-[#059669]"></span> Receita Realizada (% da Prevista)
+          </span>
+        `;
+        datasets = [
+          {
+            label: "Receita Realizada",
+            data: sortedTurmas.map(d => d.calcRealizada),
+            backgroundColor: "#059669",
+            hoverBackgroundColor: "#047857",
+            borderRadius: 8,
+            barPercentage: 0.72,
+            categoryPercentage: 0.82,
+            datalabels: {
+              display: true,
+              anchor: "end",
+              align: "right",
+              offset: 6,
+              color: "#064E3B",
+              font: { family: "Inter", weight: "700", size: isMobile ? 11 : 12 },
+              formatter: (val, ctx) => {
+                const item = sortedTurmas[ctx.dataIndex];
+                const pct = item ? ` (${Math.round(item.calcTaxa)}%)` : "";
+                return (isMobile ? formatBRLCompact(val) : formatBRL(val)) + pct;
+              }
+            }
+          }
+        ];
+      } else {
+        legendEl.innerHTML = `
+          <span class="inline-flex items-center gap-1.5 text-amber-800">
+            <span class="w-3 h-3 rounded-sm bg-[#D97706]"></span> Inadimplência em Aberto
+          </span>
+        `;
+        datasets = [
+          {
+            label: "Inadimplência",
+            data: sortedTurmas.map(d => d.calcInadimplencia),
+            backgroundColor: "#D97706",
+            hoverBackgroundColor: "#B45309",
+            borderRadius: 8,
+            barPercentage: 0.72,
+            categoryPercentage: 0.82,
+            datalabels: {
+              display: true,
+              anchor: "end",
+              align: "right",
+              offset: 6,
+              color: "#92400E",
+              font: { family: "Inter", weight: "700", size: isMobile ? 11 : 12 },
+              formatter: (val) => isMobile ? formatBRLCompact(val) : formatBRL(val)
+            }
+          }
+        ];
+      }
+
+      // Margem direita extra para o texto da ponta das barras nunca cortar no celular
+      const maxValor = Math.max(
+        ...sortedTurmas.map(d => Math.max(d.calcPrevista, d.calcRealizada, d.calcInadimplencia)),
+        1000
+      );
+      const suggestedMax = maxValor * (isMobile ? 1.32 : 1.22);
+
+      const ctx = document.getElementById("faturamentoChart").getContext("2d");
+      if (mainChart) mainChart.destroy();
+
+      mainChart = new Chart(ctx, {
+        type: "bar",
+        data: { labels, datasets },
+        options: {
+          indexAxis: "y",
+          responsive: true,
+          maintainAspectRatio: false,
+          onClick: (_, elements) => {
+            if (elements && elements.length > 0) {
+              const idx = elements[0].index;
+              const turmaObj = sortedTurmas[idx];
+              if (turmaObj) openTurmaModal(turmaObj);
+            }
+          },
+          interaction: {
+            mode: "index",
+            intersect: false
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: "#0F172A",
+              titleColor: "#F8FAFC",
+              bodyColor: "#E2E8F0",
+              padding: 12,
+              cornerRadius: 12,
+              titleFont: { family: "Inter", size: 13, weight: "bold" },
+              bodyFont: { family: "Inter", size: 12 },
+              callbacks: {
+                title: (items) => {
+                  const item = sortedTurmas[items[0].dataIndex];
+                  return `Turma ${item.turma} • ${formatPct(item.calcTaxa)} atingido`;
+                },
+                label: (context) => {
+                  return ` ${context.dataset.label}: ${formatBRL(context.parsed.x)}`;
+                },
+                afterBody: (items) => {
+                  const item = sortedTurmas[items[0].dataIndex];
+                  if (state.metrica !== "inadimplencia") {
+                    return [` Inadimplência: ${formatBRL(item.calcInadimplencia)}`];
+                  }
+                  return [` Receita Realizada: ${formatBRL(item.calcRealizada)}`];
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              beginAtZero: true,
+              suggestedMax,
+              grid: {
+                color: "#F1F5F9"
+              },
+              ticks: {
+                font: { family: "Inter", size: 11 },
+                color: "#64748B",
+                maxTicksLimit: isMobile ? 4 : 7,
+                callback: (v) => formatBRLCompact(v)
+              }
+            },
+            y: {
+              grid: { display: false },
+              ticks: {
+                autoSkip: false,
+                font: { family: "Inter", size: 14, weight: "700" },
+                color: "#0F172A"
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Renderiza os Cards Mobile (< 768px) e a Tabela Desktop (>= 768px)
+    function renderCardsAndTable(sortedTurmas) {
+      const termo = state.busca.trim().toLowerCase();
+      const filtered = termo
+        ? sortedTurmas.filter(d => d.turma.toLowerCase().includes(termo))
+        : sortedTurmas;
+
+      const cardsContainer = document.getElementById("mobileCardsContainer");
+      const tbody = document.getElementById("tabelaCorpo");
+      const tfoot = document.getElementById("tabelaRodape");
+
+      if (filtered.length === 0) {
+        cardsContainer.innerHTML = `
+          <div class="bg-white rounded-2xl p-6 border border-slate-200 text-center text-sm text-slate-500">
+            Nenhuma turma encontrada para "${state.busca}".
+          </div>
+        `;
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="py-8 text-center text-slate-500 text-sm">
+              Nenhuma turma encontrada para "${state.busca}".
+            </td>
+          </tr>
+        `;
+        tfoot.innerHTML = "";
+        return;
+      }
+
+      // 1. Cards Mobile-First
+      cardsContainer.innerHTML = filtered.map(item => {
+        const badgeStyle = item.calcTaxa >= 65
+          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+          : item.calcTaxa >= 45
+            ? "bg-blue-50 text-blue-700 border-blue-200"
+            : "bg-amber-50 text-amber-800 border-amber-200";
+        const barWidth = Math.min(100, Math.max(0, item.calcTaxa));
+
+        return `
+          <article data-turma="${item.turma}" class="turma-card bg-white rounded-2xl p-4 border border-slate-200 shadow-xs active:scale-[0.99] transition cursor-pointer">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2.5">
+                <span class="text-base font-extrabold text-navy-900">${item.turma}</span>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold border ${badgeStyle} tabular-nums">
+                  ${formatPct(item.calcTaxa)}
+                </span>
+              </div>
+              <span class="inline-flex items-center gap-1 text-xs font-semibold text-blue-600">
+                <span>${item.grupos.length} ${item.grupos.length === 1 ? "grupo" : "grupos"}</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </span>
+            </div>
+
+            <!-- Barra de Progresso -->
+            <div class="mt-2.5 w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+              <div class="bg-emerald-500 h-2 rounded-full" style="width: ${barWidth.toFixed(1)}%"></div>
+            </div>
+
+            <!-- Valores Grandes em 3 Colunas -->
+            <div class="mt-3 pt-3 border-t border-slate-100 grid grid-cols-3 gap-2">
+              <div>
+                <span class="block text-[10px] font-bold uppercase text-slate-400">Realizada</span>
+                <span class="text-sm font-extrabold text-emerald-600 tabular-nums">${formatBRL(item.calcRealizada)}</span>
+              </div>
+              <div>
+                <span class="block text-[10px] font-bold uppercase text-slate-400">Prevista</span>
+                <span class="text-sm font-bold text-slate-700 tabular-nums">${formatBRL(item.calcPrevista)}</span>
+              </div>
+              <div class="text-right">
+                <span class="block text-[10px] font-bold uppercase text-slate-400">Inadimp.</span>
+                <span class="text-sm font-bold text-amber-600 tabular-nums">${formatBRL(item.calcInadimplencia)}</span>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      // 2. Tabela Desktop
+      tbody.innerHTML = filtered.map(item => {
+        const badgeStyle = item.calcTaxa >= 65
+          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+          : item.calcTaxa >= 45
+            ? "bg-blue-50 text-blue-700 border-blue-200"
+            : "bg-amber-50 text-amber-800 border-amber-200";
+
+        return `
+          <tr data-turma="${item.turma}" class="turma-row hover:bg-blue-50/50 transition cursor-pointer group">
+            <td class="py-3.5 px-6 font-extrabold text-navy-900">${item.turma}</td>
+            <td class="py-3.5 px-4 text-right font-medium text-slate-700 tabular-nums">${formatBRL(item.calcPrevista)}</td>
+            <td class="py-3.5 px-4 text-right font-bold text-emerald-600 tabular-nums">${formatBRL(item.calcRealizada)}</td>
+            <td class="py-3.5 px-4 text-right font-semibold text-amber-600 tabular-nums">${formatBRL(item.calcInadimplencia)}</td>
+            <td class="py-3.5 px-4 text-right tabular-nums">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border ${badgeStyle}">
+                ${formatPct(item.calcTaxa)}
+              </span>
+            </td>
+            <td class="py-3.5 px-6 text-center">
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 group-hover:bg-blue-600 group-hover:text-white text-slate-700 text-xs font-bold transition">
+                ${item.grupos.length}
+              </span>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      const sumPrev = filtered.reduce((s, d) => s + d.calcPrevista, 0);
+      const sumReal = filtered.reduce((s, d) => s + d.calcRealizada, 0);
+      const sumInad = filtered.reduce((s, d) => s + d.calcInadimplencia, 0);
+      const sumTaxa = sumPrev > 0 ? (sumReal / sumPrev) * 100 : 0;
+
+      tfoot.innerHTML = `
+        <tr>
+          <td class="py-3.5 px-6">TOTAL (${filtered.length} turmas)</td>
+          <td class="py-3.5 px-4 text-right tabular-nums">${formatBRL(sumPrev)}</td>
+          <td class="py-3.5 px-4 text-right text-emerald-700 tabular-nums">${formatBRL(sumReal)}</td>
+          <td class="py-3.5 px-4 text-right text-amber-700 tabular-nums">${formatBRL(sumInad)}</td>
+          <td class="py-3.5 px-4 text-right tabular-nums">${formatPct(sumTaxa)}</td>
+          <td class="py-3.5 px-6 text-center text-slate-400">—</td>
+        </tr>
+      `;
+
+      // Eventos de abertura do Bottom Sheet / Modal
+      const bindOpen = (el) => {
+        el.addEventListener("click", () => {
+          const code = el.getAttribute("data-turma");
+          const found = filtered.find(d => d.turma === code);
+          if (found) openTurmaModal(found);
+        });
+      };
+      cardsContainer.querySelectorAll(".turma-card").forEach(bindOpen);
+      tbody.querySelectorAll(".turma-row").forEach(bindOpen);
+    }
+
+    // Abre Bottom Sheet / Modal com detalhamento por grupo financeiro
+    function openTurmaModal(item) {
+      const periodObj = getActivePeriodObject();
+      document.getElementById("modalSubtitulo").textContent = `Grupos Financeiros • ${periodObj.label}`;
+      document.getElementById("modalTitulo").textContent = `Turma ${item.turma}`;
+
+      document.getElementById("modalResumoCards").innerHTML = `
+        <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-2.5">
+          <span class="block text-[10px] font-bold uppercase text-emerald-700">Realizada</span>
+          <span class="text-xs sm:text-sm font-extrabold text-emerald-700 tabular-nums">${formatBRL(item.calcRealizada)}</span>
+        </div>
+        <div class="bg-blue-50 border border-blue-100 rounded-xl p-2.5">
+          <span class="block text-[10px] font-bold uppercase text-blue-700">Prevista</span>
+          <span class="text-xs sm:text-sm font-extrabold text-navy-900 tabular-nums">${formatBRL(item.calcPrevista)}</span>
+        </div>
+        <div class="bg-amber-50 border border-amber-100 rounded-xl p-2.5">
+          <span class="block text-[10px] font-bold uppercase text-amber-700">Inadimp.</span>
+          <span class="text-xs sm:text-sm font-extrabold text-amber-700 tabular-nums">${formatBRL(item.calcInadimplencia)}</span>
+        </div>
+      `;
+
+      document.getElementById("modalGruposLista").innerHTML = item.grupos.map(g => {
+        const isDP = g.nome === "Débitos Pendentes";
+        const oculto = isDP && !state.incluirDebitosPendentes;
+        return `
+          <div class="rounded-xl border border-slate-200 p-3 ${oculto ? "bg-slate-50 opacity-55" : "bg-white"}">
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-xs sm:text-sm font-bold text-navy-900">${g.nome}</span>
+              ${oculto ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 text-slate-600">Desativado no filtro</span>' : ""}
+            </div>
+            <div class="grid grid-cols-3 gap-2 text-xs tabular-nums">
+              <div>
+                <span class="block text-[10px] text-slate-400 uppercase font-semibold">Realizada</span>
+                <span class="font-bold text-emerald-600">${formatBRL(g.realizada)}</span>
+              </div>
+              <div>
+                <span class="block text-[10px] text-slate-400 uppercase font-semibold">Prevista</span>
+                <span class="font-semibold text-slate-700">${formatBRL(g.prevista)}</span>
+              </div>
+              <div class="text-right">
+                <span class="block text-[10px] text-slate-400 uppercase font-semibold">Inadimplência</span>
+                <span class="font-bold text-amber-600">${formatBRL(g.inadimplencia)}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      const obsEl = document.getElementById("modalObservacao");
+      if (item.grupos.some(g => g.nome === "Débitos Pendentes" && g.prevista === 0)) {
+        obsEl.textContent = "Nota: No grupo Débitos Pendentes desta turma, a receita prevista consta como R$ 0,00 enquanto realizada e inadimplência registram valores idênticos.";
+        obsEl.classList.remove("hidden");
+      } else {
+        obsEl.classList.add("hidden");
+      }
+
+      document.getElementById("detalheModal").classList.remove("hidden");
+    }
+
+    function closeTurmaModal() {
+      document.getElementById("detalheModal").classList.add("hidden");
+    }
+
+    function showToast(msg) {
+      const banner = document.getElementById("toastBanner");
+      document.getElementById("toastText").textContent = msg;
+      banner.classList.remove("hidden");
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => banner.classList.add("hidden"), 3200);
+    }
+
+    // Compartilhamento nativo no celular ou cópia formatada para WhatsApp
+    async function compartilharResumo() {
+      const periodObj = getActivePeriodObject();
+      const turmas = getProcessedTurmas();
+      const totalPrev = turmas.reduce((s, d) => s + d.calcPrevista, 0);
+      const totalReal = turmas.reduce((s, d) => s + d.calcRealizada, 0);
+      const totalInad = turmas.reduce((s, d) => s + d.calcInadimplencia, 0);
+      const taxa = totalPrev > 0 ? (totalReal / totalPrev) * 100 : 0;
+
+      const top3 = [...turmas]
+        .sort((a, b) => b.calcRealizada - a.calcRealizada)
+        .slice(0, 3)
+        .map((t, i) => `${i + 1}. ${t.turma}: ${formatBRL(t.calcRealizada)}`)
+        .join("\n");
+
+      const texto = [
+        `📊 *Faturamento por Turma — Escola Técnica Vencer (Bonsucesso)*`,
+        `📅 Período: *${periodObj.label}*`,
+        `✅ Realizada: *${formatBRL(totalReal)}* (${formatPct(taxa)})`,
+        `📋 Prevista: ${formatBRL(totalPrev)}`,
+        `⚠️ Inadimplência: ${formatBRL(totalInad)}`,
+        ``,
+        `🏆 *Top 3 Turmas (Realizada):*`,
+        top3
+      ].join("\n");
+
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: `Faturamento por Turma — ${periodObj.label}`,
+            text: texto
+          });
+          return;
+        } catch (err) {
+          // Segue para fallback de cópia se o usuário cancelar ou não suportar
+        }
+      }
+
+      const ta = document.createElement("textarea");
+      ta.value = texto;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand("copy");
+        showToast("Resumo copiado! Cole diretamente no WhatsApp.");
+      } catch (e) {
+        showToast("Não foi possível copiar o resumo.");
+      }
+      document.body.removeChild(ta);
+    }
+
+    // Exportação CSV
+    function exportarCSV() {
+      const periodObj = getActivePeriodObject();
+      const sorted = getSortedTurmas(getProcessedTurmas());
+      const headers = ["Turma", "Periodo", "Prevista (R$)", "Realizada (R$)", "Inadimplencia (R$)", "% Atingido"];
+      const rows = sorted.map(d => [
+        d.turma,
+        periodObj.label,
+        d.calcPrevista.toFixed(2).replace(".", ","),
+        d.calcRealizada.toFixed(2).replace(".", ","),
+        d.calcInadimplencia.toFixed(2).replace(".", ","),
+        d.calcTaxa.toFixed(2).replace(".", ",")
+      ]);
+
+      const csv = "\uFEFF" + [headers.join(";"), ...rows.map(r => r.join(";"))].join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `faturamento_vencer_${state.periodo}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast("Planilha CSV baixada!");
+    }
+
+    function refreshAll() {
+      const processed = getProcessedTurmas();
+      const sorted = getSortedTurmas(processed);
+      updateKPIs(processed);
+      renderEvolucaoMensal();
+      renderMainChart(sorted);
+      renderCardsAndTable(sorted);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderPeriodPills();
+
+      // Seletor de métrica
+      document.querySelectorAll(".metric-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          state.metrica = btn.getAttribute("data-metric");
+          document.querySelectorAll(".metric-btn").forEach(b => {
+            const isSelected = b.getAttribute("data-metric") === state.metrica;
+            b.className = isSelected
+              ? "metric-btn min-h-[44px] px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold border transition flex items-center justify-center gap-2 cursor-pointer bg-blue-600 text-white border-blue-600 shadow-xs"
+              : "metric-btn min-h-[44px] px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold border transition flex items-center justify-center gap-2 cursor-pointer bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100";
+          });
+          refreshAll();
+        });
+      });
+
+      // Filtro de bloco
+      document.getElementById("filtroBloco").addEventListener("change", (e) => {
+        state.bloco = e.target.value;
+        refreshAll();
+      });
+
+      // Ordenação
+      document.getElementById("ordenacaoSelect").addEventListener("change", (e) => {
+        state.ordenacao = e.target.value;
+        refreshAll();
+      });
+
+      // Toggle Débitos Pendentes
+      const toggleDP = document.getElementById("toggleDebitosPendentes");
+      toggleDP.addEventListener("click", () => {
+        state.incluirDebitosPendentes = !state.incluirDebitosPendentes;
+        toggleDP.setAttribute("aria-pressed", String(state.incluirDebitosPendentes));
+        const label = document.getElementById("labelDebitosPendentes");
+        const pill = document.getElementById("pillDebitosPendentes");
+
+        if (state.incluirDebitosPendentes) {
+          toggleDP.className = "w-full min-h-[44px] flex items-center justify-between px-3.5 rounded-xl border border-blue-200 bg-blue-50 text-blue-900 text-xs sm:text-sm font-bold transition cursor-pointer";
+          label.textContent = "Incluídos no total";
+          pill.textContent = "SIM";
+          pill.className = "px-2 py-0.5 rounded-full bg-blue-600 text-white text-[11px] font-bold";
+        } else {
+          toggleDP.className = "w-full min-h-[44px] flex items-center justify-between px-3.5 rounded-xl border border-slate-300 bg-slate-100 text-slate-700 text-xs sm:text-sm font-bold transition cursor-pointer";
+          label.textContent = "Excluídos do total";
+          pill.textContent = "NÃO";
+          pill.className = "px-2 py-0.5 rounded-full bg-slate-500 text-white text-[11px] font-bold";
+        }
+        refreshAll();
+      });
+
+      // Busca
+      document.getElementById("buscaTurma").addEventListener("input", (e) => {
+        state.busca = e.target.value;
+        renderCardsAndTable(getSortedTurmas(getProcessedTurmas()));
+      });
+
+      // Compartilhar e CSV
+      document.getElementById("btnCompartilhar").addEventListener("click", compartilharResumo);
+      document.getElementById("btnExportarCsv").addEventListener("click", exportarCSV);
+
+      // Modal
+      document.getElementById("fecharModal").addEventListener("click", closeTurmaModal);
+      document.getElementById("fecharModalBtn").addEventListener("click", closeTurmaModal);
+      document.getElementById("detalheModal").addEventListener("click", (e) => {
+        if (e.target.id === "detalheModal") closeTurmaModal();
+      });
+
+      // Redimensionamento responsivo do gráfico
+      let resizeTimer;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          renderMainChart(getSortedTurmas(getProcessedTurmas()));
+        }, 200);
+      });
+
+      refreshAll();
+    });
+  </script>
+</body>
+</html>
